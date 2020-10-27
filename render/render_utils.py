@@ -37,8 +37,8 @@ def get_rotation(r):
 def delete_object(obj):
     """ Delete a specified blender object """
     for o in bpy.data.objects:
-        o.select = False
-    obj.select = True
+        o.select_set(False)
+    obj.select_set(True)
     bpy.ops.object.delete()
 
 

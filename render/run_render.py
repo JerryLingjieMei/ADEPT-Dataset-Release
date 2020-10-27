@@ -59,7 +59,7 @@ def main(config):
         bpy.context.scene.cycles.device = 'GPU'
 
     bpy.context.scene.use_nodes = True
-    bpy.context.scene.render.layers['RenderLayer'].use_pass_object_index = True
+    bpy.context.view_layer.use_pass_object_index = True
 
     # set up camera
     set_camera(rendering.camera_rho, rendering.camera_theta, rendering.camera_phi,

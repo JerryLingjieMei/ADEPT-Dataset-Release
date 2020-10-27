@@ -13,6 +13,8 @@ from utils.constants import CONFIG_FOLDER, SIM_OUTPUT_FOLDER, RENDER_OUTPUT_FOLD
 from utils.misc import rand, random_distinct_colors, repeat_scale, get_host_id, BlenderArgumentParser
 from utils.shape_net import SHAPE_DIMENSIONS, random_shape_net
 
+
+default_shapes = ['boot', 'bowling_pin', 'cone', 'cube', 'cylinder', 'sphere', 'toy', 'truck']
 train_prefix = "train"
 TRAIN_CONFIG_FOLDER = mkdir(os.path.join(CONFIG_FOLDER, train_prefix))
 TRAIN_SIM_OUTPUT_FOLDER = mkdir(os.path.join(SIM_OUTPUT_FOLDER, train_prefix))
@@ -24,7 +26,7 @@ def parse_args():
     parser = BlenderArgumentParser(description='')
     parser.add_argument('--start', help='image index to start', type=int, default=0)
     parser.add_argument('--start_index', help='image index to start', type=int)
-    parser.add_argument('--end', help='image index to end', type=int, required=True)
+    parser.add_argument('--end', help='image index to end', type=int, required=True, default=10)
     parser.add_argument("--stride", help="image index stride", type=int, default=1)
     parser.add_argument("--requires_valid", type=int, default=1)
     parser.add_argument("--preview", type=int, default=0)
@@ -95,11 +97,15 @@ def get_objects(colors, materials):
     for obj_id in range(n_objects):
         side_rand = rand(0, 1)
         size = rand(.2, .4)
+        """
         while True:
-            cat_id = np.random.randint(55)
+            # Number of ShapeNet shapes
+            cat_id = np.random.randint(17)
             if cat_id % 5 != 0:
                 break
         shape = random_shape_net(cat_id, True)
+        """
+        shape = default_shapes[random.randint(0, len(default_shapes)-1)]
         pos_z = SHAPE_DIMENSIONS[shape][2] * size
         scale = repeat_scale(size)
         orn_z = rand(-180, 180)

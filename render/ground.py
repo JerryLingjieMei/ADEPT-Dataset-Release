@@ -10,7 +10,7 @@ def add_ground(rendering):
     bpy.ops.wm.open_mainfile(filepath=rendering.base_scene_blendfile)
 
     # Select ground
-    bpy.context.scene.objects.active = bpy.data.objects["Ground"]
+    bpy.context.view_layer.objects.active = bpy.data.objects["Ground"]
 
     adjust_ground()
 
@@ -52,7 +52,7 @@ def adjust_ground():
     theta = rand(-np.pi / 3, np.pi / 3)
     depth = 15
     shift = rand(28, 32)
-    bpy.context.scene.objects.active = bpy.data.objects["Ground"]
+    bpy.context.view_layer.objects.active = bpy.data.objects["Ground"]
     bpy.context.object.rotation_mode = 'XYZ'
     bpy.context.object.rotation_euler = [0, 0, np.pi + theta]
     bpy.context.object.location = [-depth * np.cos(theta) + shift * np.sin(theta),

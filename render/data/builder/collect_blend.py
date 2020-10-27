@@ -101,8 +101,10 @@ if __name__ == '__main__':
                 worker_args.append((cat_id, shape_id, all_dimensions))
         worker_args = worker_args[args.start_index::args.stride]
 
+        """
         with Pool(cpu_count()) as p:
             p.starmap(obj_to_blend, worker_args)
+        """
 
         write_serialized(dict(all_dimensions),
                          os.path.join(SIM_SHAPE_NET_FOLDER, "all_dimensions_{:02d}.json".format(args.start_index)))

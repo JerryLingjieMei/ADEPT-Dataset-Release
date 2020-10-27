@@ -4,12 +4,17 @@ import numpy as np
 from utils.io import read_serialized, mkdir
 from utils.constants import CONTENT_FOLDER
 
+"""
 _shape_net_names = ['airplane', 'ashcan', 'bag', 'basket', 'bathtub', 'bed', 'bench', 'bicycle', 'birdhouse',
                     'bookshelf', 'bottle', 'bowl', 'bus', 'cabinet', 'camera', 'can', 'cap', 'car', 'chair',
                     'computer_keyboard', 'dishwasher', 'display', 'earphone', 'faucet', 'file', 'guitar', 'helmet',
                     'jar', 'knife', 'lamp', 'laptop', 'loudspeaker', 'mailbox', 'microphone', 'microwave', 'motorbike',
                     'mug', 'piano', 'pillow', 'pistol', 'pot', 'printer', 'remote', 'rifle', 'rocket', 'skateboard',
                     'sofa', 'stove', 'table', 'telephone', 'tower', 'train', 'vessel', 'washer', 'wine_bottle']
+"""
+
+_shape_net_names_sample = ['airplane', 'ashcan', 'bag', 'basket', 'bathtub', 'bed', 'bench', 'bicycle', 'birdhouse',
+                    'bookshelf', 'bottle', 'bowl', 'bus', 'cabinet', 'camera', 'can', 'cap']
 
 SIM_SHAPE_FOLDER = mkdir(os.path.join(CONTENT_FOLDER, "phys_sim", "data", "shapes"))
 RENDER_SHAPE_FOLDER = mkdir(os.path.join(CONTENT_FOLDER, "render", "data", "shapes"))
@@ -18,9 +23,9 @@ SIM_SHAPE_NET_FOLDER = mkdir(os.path.join(CONTENT_FOLDER, "phys_sim", "data", "a
 RENDER_SHAPE_NET_FOLDER = mkdir(os.path.join(CONTENT_FOLDER, "render", "data", "additional_shapes"))
 
 if len(os.listdir(SIM_SHAPE_NET_FOLDER)) > 0:
-    SHAPE_NET_CATEGORY = {"{:04d}".format(i): name for i, name in enumerate(_shape_net_names)}
+    SHAPE_NET_CATEGORY = {"{:04d}".format(i): name for i, name in enumerate(_shape_net_names_sample)}
     SHAPE_NET_NUMS = {"{:04d}".format(i): len(os.listdir(os.path.join(SIM_SHAPE_NET_FOLDER, "{:04d}".format(i))))
-                      for i in range(len(_shape_net_names))}
+                      for i in range(len(_shape_net_names_sample))}
     SHAPE_NET_CATEGORY_INVERSE = {v: k for k, v in SHAPE_NET_CATEGORY.items()}
 
 if os.path.exists(os.path.join(SIM_SHAPE_NET_FOLDER, "all_dimensions.json")):
@@ -40,7 +45,7 @@ if os.path.exists(os.path.join(SIM_SHAPE_FOLDER, "all_dimensions.json")):
 else:
     _shape_dimensions = dict()
 SHAPE_DIMENSIONS = {**_shape_dimensions, **_shape_net_dimensions}
-
+print(SHAPE_DIMENSIONS)
 
 def random_shape_net(cat_id, is_train):
     cat_id = int(cat_id)

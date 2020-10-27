@@ -1,4 +1,4 @@
-import bpy
+# import bpy
 import mathutils
 import math
 from collections import Iterable

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-shape_net_folder=${SHAPE_NET_CORE_ROOT}
+CONTENT_ROOT=/Users/jillianross/ResearchProjects/vil/ADEPT-Dataset-Release
+shape_net_folder=/Users/jillianross/Desktop/ShapeNetCore.v2
 sim_object_folder=${CONTENT_ROOT}/phys_sim/data/additional_shapes
 
 

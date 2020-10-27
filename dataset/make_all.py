@@ -6,7 +6,6 @@ import render.run_render as run_render
 from utils.constants import CONTENT_FOLDER
 
 
-
 def update_sim(config, args):
     sim = config.sim
     if "output_dir" not in sim:
