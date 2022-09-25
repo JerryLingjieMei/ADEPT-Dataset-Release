@@ -3,8 +3,7 @@ import json
 import os
 import csv
 from collections import defaultdict
-
-from dataset.human.result_storage import ResultStorage, CASE_PAIRS, SHAPE_CATS, get_shapes_from_cat
+from dataset.human.result_storage import ResultStorage, CASE_PAIRS, SHAPE_CATS
 from utils.io import read_serialized
 from utils.constants import CONTENT_FOLDER
 
@@ -62,12 +61,12 @@ if __name__ == '__main__':
         max_scores = read_serialized(args.summary_file)
         experiment = os.path.split(args.summary_file)[-1][:-5]
     else:
-        raise FileNotFoundError("Should specific summary folder / file")
+        raise FileNotFoundError("Should specify summary folder / file")
 
     with open("{}{}_absolute.csv".format(
-            args.output_folder, experiment), "w")as f_absolute, open(
+            args.output_folder, experiment), "w") as f_absolute, open(
         "{}/{}_relative.csv".format(
-            args.output_folder, experiment), "w")as f_relative:
+            args.output_folder, experiment), "w") as f_relative:
 
         absolute_writer = csv.DictWriter(f_absolute, fieldnames=["name", "all", *CASE_PAIRS],
                                          dialect="excel-tab")

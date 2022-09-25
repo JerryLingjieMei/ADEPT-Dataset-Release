@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 shape_net_folder=${SHAPE_NET_CORE_ROOT}
-sim_object_folder=${CONTENT_ROOT}/phys_sim/data/additional_shapes
+sim_object_folder=./phys_sim/data/additional_shapes
 
 
 cat_count=0

@@ -13,67 +13,53 @@ NeurIPS 2019, CogSci 2020
 [Paper](http://physadept.csail.mit.edu/papers/adept.pdf) [BibTeX](http://physadept.csail.mit.edu/bibtex/adept.bib) [Website](http://physadept.csail.mit.edu/)
 
 For the model, see [ADEPT-Model-Release](https://github.com/JerryLingjieMei/ADEPT-Model-Release)
-## Prerequisites
-- Linux
-- Python3
-- Blender as a python module
-- Other modules required specified in `requirements.txt`
-
+ 
 ## Getting started
-1. Clone this directory
+
+1. Clone this directory and create a conda environment for ADEPT Dataset Generation.
 
     ```bash
     git clone https://github.com/JerryLingjieMei/ADEPT-Dataset-Release
     cd ADEPT-Dataset-Release
-    ```
-    
-    And replace `CONTENT_FOLDER` in `utils.constants` and `phys_sim/data/builder/collect_obj.sh` 
-    with the absolute path to your directory.
-    
-1. Create a conda environment for ADEPT Dataset Generation,
- and install the requirements. 
- 
-    ```bash
-    conda create --n adept-dataset
+    conda create -n adept-dataset python=3.10
     conda activate adept-dataset
-    pip install -r requirements.txt
     ```
- 
- For installation of Blender as a python module, see [Blender wiki](https://wiki.blender.org/wiki/Building_Blender/Linux/Ubuntu).
-    
-    You may also try using Blender's bundled python, by replacing `python *.py --arg1 --value1` with `blender -b --python -- --arg1 --value1`
 
-1. (Optional) If you have multiple machines, you may change `get_host_id` in `utils/misc.py` 
-to reflect the id of your machine. With that in hand, you may speed up all following processes by using `--stride N` arguments, where you have `N` machines with consecutive ids.
+2. Run the setup script, which install Blender 3.1.2 and python packages used in the scripts.
+   ```bash
+    bash install.sh
+    ```
+3. Configure the `ffmpeg` in `dataset.make_video` to the one used by your system.
+1. (Optional) By default, the script in run on one machine only. Set up `get_host_id` in `util.misc` to run the job on multiple devices. Append to each script with `--stride` argument will enable job assignment.
+2. (Optional) 
+    + ShapeNet objects are by default not included unless the scripts below are run.
 
-1. To render ShapeNet objects, please download ShapeNet Core V2 from its [official website](https://www.shapenet.org/). 
-Change `SHAPE_NET_FOLDER` in `phys_sim/data/builder/collect_obj.sh` to the path of ShapeNet meshes, and run thar script.
-
-    To turn them into `.blend` files, run
-    ```bash
+    + To render ShapeNet objects, please download ShapeNet Core V2 from its [official website](https://www.shapenet.org/). 
+Change `SHAPE_NET_FOLDER` in `phys_sim/data/builder/collect_obj.sh` to the path of ShapeNet meshes, and run thar script. To turn them into `.blend` files, run
+   ```bash
     # Single machine
-    python3 render/data/builder/collect_blend.py #Map phase
-    python3 render/data/builder/collect_blend.py --reduce #Reduce phase
-    # Multiple (e.g. 8) machines
-    python3 render/data/builder/collect_blend.py --stride 8 #On each machine
-    python3 render/data/builder/collect_blend.py --reduce --stride 8 #On a single machine
+    ./blender/blender render/data/builder/collect_blend.py #Map phase
+    ./blender/blender render/data/builder/collect_blend.py -- --reduce #Reduce phase
+    # Multiple machines
+    ./blender/blender render/data/builder/collect_blend.py -- --stride 8 #On each machine
+    ./blender/blender render/data/builder/collect_blend.py -- --reduce --stride 8 #On a single machine
     ```
-
+    
 ## Dataset generation
 1. Generate training set (e.g. with 1000 videos) by running
     ```bash
     # Single machine
-    python3 dataset/generate_train.py --end 1000
-    # Multiple (e.g. 8) machines
-    python3 dataset/generate_train.py --end 1000 --stride 8 #On each machine
+    ./blender/blender dataset/generate_train.py --end 1000 --
+    # Multiple machines
+    ./blender/blender dataset/generate_train.py --end 1000 -- --stride 8 #On each machine
     ```
     
 1. Generate human test set by running
     ```bash
     # Single machine
-    python3 dataset/human/generate_human.py --end 1000
+    ./blender/blender dataset/human/generate_human.py --
     # Multiple (e.g. 8) machines
-    python3 dataset/human/generate_human.py --end 1000 --stride 8 #On each machine
+    ./blender/blender dataset/human/generate_human.py -- --stride 8 #On each machine
     ```
 
 ## Evaluation

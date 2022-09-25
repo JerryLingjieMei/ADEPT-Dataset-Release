@@ -2,8 +2,7 @@ import argparse
 import os
 import random
 
-from dataset.human.generate_human import HUMAN_VIDEO_OUTPUT_FOLDER
-from utils.constants import VIDEO_OUTPUT_FOLDER
+from utils.constants import VIDEO_OUTPUT_FOLDER, HUMAN_VIDEO_OUTPUT_FOLDER
 from utils.io import read_serialized, write_serialized, mkdir, clr_dir
 from utils.shape_net import SHAPE_CATEGORY
 

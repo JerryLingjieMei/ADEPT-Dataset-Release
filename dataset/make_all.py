@@ -34,8 +34,8 @@ def update_render(config):
     rendering.material_dir = 'render/data/materials'
     rendering.shape_dir = 'render/data/shapes'
     # scene settings
-    rendering.width = 480
-    rendering.height = 320
+    rendering.width = 1080
+    rendering.height = 780
     if "camera_rho" not in rendering:
         rendering.camera_rho = 7.2
     if "camera_theta" not in rendering:

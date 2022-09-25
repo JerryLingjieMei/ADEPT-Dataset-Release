@@ -1,6 +1,7 @@
 import argparse
 import os
 import json
+import bpy
 
 from imageio import imread
 from PIL import Image
@@ -36,8 +37,7 @@ def main(config):
     render_args.resolution_x = rendering.width
     render_args.resolution_y = rendering.height
     render_args.resolution_percentage = 100
-    render_args.tile_x = rendering.render_tile_size
-    render_args.tile_y = rendering.render_tile_size
+    bpy.context.scene.cycles.tile_size  =rendering.render_tile_size
     if rendering.use_gpu == 1:
         # blender changed the API for enabling CUDA at some point
         pref = bpy.context.user_preferences.addons["cycles"].preferences
@@ -59,7 +59,7 @@ def main(config):
         bpy.context.scene.cycles.device = 'GPU'
 
     bpy.context.scene.use_nodes = True
-    bpy.context.scene.render.layers['RenderLayer'].use_pass_object_index = True
+    bpy.context.view_layer.use_pass_object_index = True
 
     # set up camera
     set_camera(rendering.camera_rho, rendering.camera_theta, rendering.camera_phi,

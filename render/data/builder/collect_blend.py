@@ -29,7 +29,7 @@ def obj_to_blend(cat_name, shape_name, all_dimensions):
     bpy.ops.object.delete()
 
     bpy.ops.import_scene.obj(filepath=file_path, split_mode="OFF")
-    bpy.context.scene.objects.active = bpy.context.scene.objects[0]
+    bpy.context.view_layer.objects.active = bpy.context.scene.objects[0]
 
     object = bpy.context.selected_objects[0]
 
@@ -40,7 +40,6 @@ def obj_to_blend(cat_name, shape_name, all_dimensions):
     scaling = 2. / max_dimension
 
     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
-    object.data.show_double_sided = True
 
     bpy.ops.object.mode_set(mode="EDIT")
 

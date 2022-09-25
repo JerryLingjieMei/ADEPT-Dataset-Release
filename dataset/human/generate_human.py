@@ -1,26 +1,23 @@
-import argparse
 import os
+
 from easydict import EasyDict
 
-from multiprocessing import Pool, cpu_count, Process
+from multiprocessing import Pool
 from dataset.human.build_occluders import get_occluders
 from dataset.human.build_objects import get_objects
 
 from dataset.make_all import generate
-from utils.io import write_serialized, catch_abort, mkdir
-from utils.constants import SIM_OUTPUT_FOLDER, RENDER_OUTPUT_FOLDER, VIDEO_OUTPUT_FOLDER, CONFIG_FOLDER
+from utils.io import write_serialized, catch_abort
+from utils.constants import HUMAN_CONFIG_FOLDER, HUMAN_SIM_OUTPUT_FOLDER, HUMAN_RENDER_OUTPUT_FOLDER, \
+    HUMAN_VIDEO_OUTPUT_FOLDER
 from utils.misc import random_distinct_colors, get_host_id, BlenderArgumentParser
 from utils.shape_net import SHAPE_NET_CATEGORY, SHAPE_CATEGORY
-
-HUMAN_CONFIG_FOLDER = mkdir(os.path.join(CONFIG_FOLDER, "human"))
-HUMAN_SIM_OUTPUT_FOLDER = mkdir(os.path.join(SIM_OUTPUT_FOLDER, "human"))
-HUMAN_RENDER_OUTPUT_FOLDER = mkdir(os.path.join(RENDER_OUTPUT_FOLDER, "human"))
-HUMAN_VIDEO_OUTPUT_FOLDER = mkdir(os.path.join(VIDEO_OUTPUT_FOLDER, "human"))
 
 
 def parse_args():
     parser = BlenderArgumentParser(description='')
-    parser.add_argument('--start_index', help='image index to start', type=int)
+    parser.add_argument('--start', help='image index to start', type=int)
+    parser.add_argument('--end', help='image index to end', type=int, default=int(1e8))
     parser.add_argument("--stride", help="image index stride", type=int, default=1)
     parser.add_argument("--requires_valid", type=int, default=0)
     parser.add_argument("--preview", type=int, default=0)
@@ -71,8 +68,8 @@ def generate_config(case, shape):
 if __name__ == '__main__':
     args = parse_args()
     catch_abort()
-    if args.start_index is None:
-        args.start_index = get_host_id() % args.stride
+    if args.start is None:
+        args.start = get_host_id() % args.stride
 
     cases = ["disappear", "disappear_fixed", "overturn", "discontinuous", "block", "delay"]
     shapes = list(SHAPE_CATEGORY.keys()) + list(SHAPE_NET_CATEGORY.keys())
@@ -81,12 +78,13 @@ if __name__ == '__main__':
     for case in cases:
         for shape in shapes:
             case_config = generate_config(case, shape)
-            case_configs.append(case_config)
-    case_configs = case_configs[args.start_index::args.stride]
-    for case_config in case_configs:
-        for config in case_config:
-            worker_args.append((EasyDict(config), args))
-            write_serialized(config, os.path.join(HUMAN_CONFIG_FOLDER, config["case_name"] + ".yaml"))
+            case_configs.extend(case_config)
 
-    with Pool(2) as p:
+    case_configs = case_configs[args.start:args.end:args.stride]
+
+    for config in case_configs:
+        worker_args.append((EasyDict(config), args))
+        write_serialized(config, os.path.join(HUMAN_CONFIG_FOLDER, config["case_name"] + ".yaml"))
+
+    with Pool(5) as p:
         p.starmap(generate, worker_args)

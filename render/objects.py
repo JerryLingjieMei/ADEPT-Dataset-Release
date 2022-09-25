@@ -88,12 +88,9 @@ class ObjectManager(object):
         bpy.data.objects[shape].name = new_name
 
         # Set the new object as active, then rotate, scale, and translate it
-        bpy.context.scene.objects.active = bpy.data.objects[new_name]
+        bpy.context.view_layer.objects.active = bpy.data.objects[new_name]
         bpy.ops.transform.resize(value=scale)
         self.set_position(new_name, loc, euler)
-
-        # Double sided
-        bpy.data.objects[new_name].data.show_double_sided = True
 
         if counted:
             self.obj_names.append(new_name)
@@ -120,7 +117,7 @@ class ObjectManager(object):
         return names
 
     def set_position(self, name, loc, euler, key_frame=False):
-        bpy.context.scene.objects.active = bpy.data.objects[name]
+        bpy.context.view_layer.objects.active = bpy.data.objects[name]
         bpy.context.object.rotation_mode = 'XYZ'
         bpy.context.object.rotation_euler = euler
         bpy.context.object.location = loc
@@ -149,7 +146,7 @@ class ObjectManager(object):
         Create a new material and assign it to the active object. "name" should be the
         name of a material that has been previously loaded using load_materials.
         """
-        bpy.context.scene.objects.active = bpy.data.objects[obj_name]
+        bpy.context.view_layer.objects.active = bpy.data.objects[obj_name]
 
         # Figure out how many materials are already in the scene
         mat_count = len(bpy.data.materials)
@@ -206,7 +203,7 @@ class ObjectManager(object):
 
     def log(self, id, motion, mask):
         """log the motion of object id into log"""
-        bpy.context.scene.objects.active = bpy.data.objects[self.obj_names[id]]
+        bpy.context.view_layer.objects.active = bpy.data.objects[self.obj_names[id]]
         obj_mask = np.asarray(mask, dtype=np.uint8, order="F")
         mask_code = mask_util.encode(obj_mask)
         mask_code["counts"] = mask_code["counts"].decode("ASCII")
