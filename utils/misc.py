@@ -1,3 +1,4 @@
+import hashlib
 import random
 import socket
 import sys
@@ -68,3 +69,23 @@ def get_host_id():
         return int(x) - 1
     except:
         return 0
+
+
+def md5_hash(x):
+    if isinstance(x, (tuple, list)):
+        m = hashlib.md5()
+        for s in x:
+            assert isinstance(s, (int, str))
+            m.update(str(s).encode('utf-8'))
+        return m
+    elif isinstance(x, (int, str)):
+        x = str(x).encode('utf-8')
+        return hashlib.md5(x)
+    else:
+        raise ValueError(f'util.md5_hash doesnt currently support type({type(x)}')
+
+
+def int_hash(x, max=int(1e7)):
+    md5 = int(md5_hash(x).hexdigest(), 16)
+    h = abs(md5) % max
+    return h

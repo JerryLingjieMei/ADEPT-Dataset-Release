@@ -179,5 +179,8 @@ if __name__ == '__main__':
     for i in range(args.start_index, args.end, args.stride):
         worker_args.append((i, args))
 
-    with Pool(2) as p:
-        p.starmap(main, worker_args)
+    # with Pool(2) as p:
+    #     p.starmap(main, worker_args)
+
+    for worker_arg in worker_args:
+        generate(*worker_arg)

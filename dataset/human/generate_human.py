@@ -1,7 +1,8 @@
 import os
+import random
 
 from easydict import EasyDict
-
+import numpy as np
 from multiprocessing import Pool
 from dataset.human.build_occluders import get_occluders
 from dataset.human.build_objects import get_objects
@@ -10,7 +11,7 @@ from dataset.make_all import generate
 from utils.io import write_serialized, catch_abort
 from utils.constants import HUMAN_CONFIG_FOLDER, HUMAN_SIM_OUTPUT_FOLDER, HUMAN_RENDER_OUTPUT_FOLDER, \
     HUMAN_VIDEO_OUTPUT_FOLDER
-from utils.misc import random_distinct_colors, get_host_id, BlenderArgumentParser
+from utils.misc import random_distinct_colors, get_host_id, BlenderArgumentParser, int_hash
 from utils.shape_net import SHAPE_NET_CATEGORY, SHAPE_CATEGORY
 
 
@@ -45,6 +46,9 @@ def get_sim_pattern(case, i):
 
 
 def generate_config(case, shape):
+    seed = int_hash((case, shape))
+    np.random.seed(seed)
+    random.seed(seed)
     scenes = []
     colors = random_distinct_colors(5)
     materials = ["rubber"] * 5
@@ -75,6 +79,7 @@ if __name__ == '__main__':
     shapes = list(SHAPE_CATEGORY.keys()) + list(SHAPE_NET_CATEGORY.keys())
     worker_args = []
     case_configs = []
+
     for case in cases:
         for shape in shapes:
             case_config = generate_config(case, shape)
@@ -86,5 +91,7 @@ if __name__ == '__main__':
         worker_args.append((EasyDict(config), args))
         write_serialized(config, os.path.join(HUMAN_CONFIG_FOLDER, config["case_name"] + ".yaml"))
 
-    with Pool(5) as p:
-        p.starmap(generate, worker_args)
+    # with Pool(5) as p:
+    #     p.starmap(generate, worker_args)
+    for worker_arg in worker_args:
+        generate(*worker_arg)

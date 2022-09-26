@@ -38,28 +38,28 @@ For the model, see [ADEPT-Model-Release](https://github.com/JerryLingjieMei/ADEP
 Change `SHAPE_NET_FOLDER` in `phys_sim/data/builder/collect_obj.sh` to the path of ShapeNet meshes, and run thar script. To turn them into `.blend` files, run
    ```bash
     # Single machine
-    ./blender/blender render/data/builder/collect_blend.py #Map phase
-    ./blender/blender render/data/builder/collect_blend.py -- --reduce #Reduce phase
+    ./blender/blender --background --python render/data/builder/collect_blend.py #Map phase
+    ./blender/blender --background --python render/data/builder/collect_blend.py -- --reduce #Reduce phase
     # Multiple machines
-    ./blender/blender render/data/builder/collect_blend.py -- --stride 8 #On each machine
-    ./blender/blender render/data/builder/collect_blend.py -- --reduce --stride 8 #On a single machine
+    ./blender/blender --background --python render/data/builder/collect_blend.py -- --stride 8 #On each machine
+    ./blender/blender --background --python render/data/builder/collect_blend.py -- --reduce --stride 8 #On a single machine
     ```
     
 ## Dataset generation
 1. Generate training set (e.g. with 1000 videos) by running
     ```bash
     # Single machine
-    ./blender/blender dataset/generate_train.py --end 1000 --
+    ./blender/blender --background --python dataset/generate_train.py --end 1000 --
     # Multiple machines
-    ./blender/blender dataset/generate_train.py --end 1000 -- --stride 8 #On each machine
+    ./blender/blender --background --python dataset/generate_train.py --end 1000 -- --stride 8 #On each machine
     ```
     
 1. Generate human test set by running
     ```bash
     # Single machine
-    ./blender/blender dataset/human/generate_human.py --
+    ./blender/blender --background --python dataset/human/generate_human.py --
     # Multiple (e.g. 8) machines
-    ./blender/blender dataset/human/generate_human.py -- --stride 8 #On each machine
+    ./blender/blender --background --python ataset/human/generate_human.py -- --stride 8 #On each machine
     ```
 
 ## Evaluation
